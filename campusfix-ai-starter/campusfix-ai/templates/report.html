@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Report a Problem · CampusFix AI{% endblock %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">HELP IMPROVE YOUR CAMPUS</div><h1>Report a problem</h1><p>Give the maintenance team the details they need to investigate the issue.</p></div>
+<div class="form-layout">
+  <form class="panel form-panel" method="post" enctype="multipart/form-data">
+    <div class="form-section-title"><span class="step">01</span><div><h2>Issue details</h2><p>Describe what needs attention.</p></div></div>
+    <label>Your name <span class="optional">(optional)</span><input name="student_name" maxlength="100" placeholder="e.g. Rahul"></label>
+    <label>Complaint title <span class="required">*</span><input name="title" required maxlength="120" placeholder="e.g. Fan not working in Room 204"></label>
+    <label>Description <span class="required">*</span><textarea name="description" required maxlength="2000" rows="5" placeholder="Explain what happened, when you noticed it, and any useful details..."></textarea></label>
+    <label>Exact location <span class="required">*</span><input name="location" required maxlength="120" placeholder="e.g. Block A, Room 204"></label>
+    <label>Photo evidence <span class="optional">(optional, max 5 MB)</span><input type="file" name="photo" accept=".png,.jpg,.jpeg,.webp"><small class="helper">PNG, JPG, JPEG, or WEBP only.</small></label>
+    <div class="notice"><strong>✦ Smart triage</strong><p>CampusFix will suggest a category and priority based on the complaint text. A staff member should review the suggestion.</p></div>
+    <button class="btn primary full-width" type="submit">Submit complaint <span>→</span></button>
+  </form>
+  <aside class="side-info">
+    <div class="panel"><div class="side-icon">✓</div><h3>What happens next?</h3><ul class="steps-list"><li><span>1</span><div><strong>Report received</strong><small>Your complaint gets a tracking ID.</small></div></li><li><span>2</span><div><strong>Team reviews it</strong><small>Category and priority are suggested.</small></div></li><li><span>3</span><div><strong>Progress is tracked</strong><small>Check status on the complaints page.</small></div></li></ul></div>
+    <div class="safety-note"><strong>Safety emergency?</strong><p>If someone is in immediate danger, contact campus security or local emergency services directly. Do not rely on this demo website for emergency response.</p></div>
+  </aside>
+</div>
+{% endblock %}

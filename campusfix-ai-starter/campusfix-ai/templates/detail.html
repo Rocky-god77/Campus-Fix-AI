@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Complaint #{{ item['id'] }} · CampusFix AI{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('complaints') }}">Complaints</a><span>/</span> Complaint #{{ item['id'] }}</div>
+<div class="detail-heading"><div><div class="eyebrow">COMPLAINT #{{ item['id'] }} · SUBMITTED {{ item['created_at'] }}</div><h1>{{ item['title'] }}</h1><p>{{ item['location'] }} · {{ item['category'] }}</p></div><span class="badge large {{ item['priority']|lower }}">{{ item['priority'] }} priority</span></div>
+<div class="detail-grid">
+  <section class="panel">
+    <div class="panel-heading"><div><h2>Complaint details</h2><p>Submitted by {{ item['student_name'] }}</p></div><span class="status">{{ item['status'] }}</span></div>
+    <p class="description-text">{{ item['description'] }}</p>
+    {% if item['image_path'] %}<img class="complaint-photo" src="{{ url_for('static', filename=item['image_path']) }}" alt="Complaint photo">{% endif %}
+    <div class="ai-note"><span>✦</span><div><strong>Automated suggestion</strong><p>{{ item['priority_reason'] }} Suggested category: <b>{{ item['category'] }}</b>. These are rule-based suggestions and should be reviewed by staff.</p></div></div>
+    <h3 class="subheading">Activity history</h3>
+    <div class="timeline">{% for u in updates %}<div class="timeline-item"><span class="timeline-dot"></span><div><strong>{{ u['new_status'] }}</strong><small>{{ u['created_at'] }}</small><p>{{ u['note'] }}</p></div></div>{% endfor %}</div>
+    {% if similar %}<h3 class="subheading">Possible similar reports</h3><p class="muted">These reports share a location and similar wording. Review them before merging anything.</p><div class="similar-list">{% for s in similar %}<a href="{{ url_for('complaint_detail', complaint_id=s['id']) }}">#{{ s['id'] }} · {{ s['title'] }} <span>{{ s['score'] }}% text similarity</span></a>{% endfor %}</div>{% endif %}
+  </section>
+  <aside class="panel">
+    <div class="panel-heading"><div><h2>Manage complaint</h2><p>Demo staff controls</p></div></div>
+    <form method="post" action="{{ url_for('update_complaint', complaint_id=item['id']) }}" class="manage-form">
+      <label>Status<select name="status">{% for s in statuses %}<option value="{{ s }}" {% if item['status']==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+      <label>Priority<select name="priority">{% for p in priorities %}<option value="{{ p }}" {% if item['priority']==p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select></label>
+      <label>Assigned to<input name="assigned_to" value="{{ item['assigned_to'] }}" maxlength="100" placeholder="Staff member name"></label>
+      <label>Update / resolution note<textarea name="note" rows="4" maxlength="1000" placeholder="Add an update for the activity history...">{{ item['resolution_note'] }}</textarea></label>
+      <button class="btn primary full-width" type="submit">Save changes</button>
+    </form>
+    <div class="meta-list"><div><span>Created</span><strong>{{ item['created_at'] }}</strong></div><div><span>Last updated</span><strong>{{ item['updated_at'] }}</strong></div></div>
+  </aside>
+</div>
+{% endblock %}

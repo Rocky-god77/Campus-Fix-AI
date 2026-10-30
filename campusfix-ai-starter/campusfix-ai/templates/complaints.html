@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Complaints · CampusFix AI{% endblock %}
+{% block content %}
+<div class="page-heading heading-row"><div><div class="eyebrow">CAMPUS ISSUE TRACKER</div><h1>Complaints</h1><p>Search reports and review their current status.</p></div><a class="btn primary" href="{{ url_for('report') }}">＋ New complaint</a></div>
+<form class="filter-bar" method="get">
+  <input name="q" value="{{ q }}" placeholder="Search title, location, or ID...">
+  <select name="status"><option value="">All statuses</option>{% for s in statuses %}<option value="{{ s }}" {% if selected_status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select name="category"><option value="">All categories</option>{% for c in categories %}<option value="{{ c }}" {% if selected_category==c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+  <button class="btn secondary" type="submit">Filter</button><a class="clear-link" href="{{ url_for('complaints') }}">Clear</a>
+</form>
+<div class="panel">
+{% if complaints %}
+<div class="table-wrap"><table><thead><tr><th>Complaint</th><th>Location</th><th>Priority</th><th>Status</th><th>Updated</th><th></th></tr></thead><tbody>
+{% for c in complaints %}
+<tr><td><a class="issue-link" href="{{ url_for('complaint_detail', complaint_id=c['id']) }}">#{{ c['id'] }} · {{ c['title'] }}</a><small>{{ c['category'] }} · by {{ c['student_name'] }}</small></td><td>{{ c['location'] }}</td><td><span class="badge {{ c['priority']|lower }}">{{ c['priority'] }}</span></td><td><span class="status">{{ c['status'] }}</span></td><td>{{ c['updated_at'] }}</td><td><a class="text-link" href="{{ url_for('complaint_detail', complaint_id=c['id']) }}">Open →</a></td></tr>
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><div class="empty-icon">⌕</div><h3>No matching complaints</h3><p>Try another search or submit a new report.</p><a class="btn primary" href="{{ url_for('report') }}">Report a problem</a></div>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}About · CampusFix AI{% endblock %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">ABOUT THE PROJECT</div><h1>Smarter campus maintenance.</h1><p>CampusFix AI is a hackathon prototype for making campus complaint reporting and follow-up more organized.</p></div>
+<div class="about-grid">
+  <div class="panel"><div class="feature-icon">⌁</div><h2>Smart triage</h2><p>Rule-based logic suggests a category and priority from the complaint description. Staff can review and override suggestions.</p></div>
+  <div class="panel"><div class="feature-icon">◎</div><h2>Duplicate hints</h2><p>Text similarity and matching locations help flag reports that may describe the same issue. Nothing is automatically deleted.</p></div>
+  <div class="panel"><div class="feature-icon">↗</div><h2>Transparent tracking</h2><p>Complaint status, staff assignment, and activity notes help demonstrate how issues move toward resolution.</p></div>
+</div>
+<div class="notice"><strong>Prototype limitations</strong><p>This version does not include real user authentication, email notifications, a production AI model, or deployment hardening. The complaint management controls are intended for a local demo. Add secure authentication and authorization before using it with real student data.</p></div>
+{% endblock %}

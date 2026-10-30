@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · CampusFix AI{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">SMART CAMPUS • BETTER RESPONSE</div>
+    <h1>Make campus problems<br><span>easier to solve.</span></h1>
+    <p>Report an issue, track progress, and help your campus team prioritize what matters.</p>
+    <div class="hero-actions"><a class="btn primary" href="{{ url_for('report') }}">＋ Report a problem</a><a class="btn secondary" href="{{ url_for('complaints') }}">View all complaints →</a></div>
+  </div>
+  <div class="hero-art"><div class="art-circle">✓</div><div class="art-card"><span class="dot green"></span> Issue tracking <strong>Made simple</strong><small>Report · Assign · Resolve</small></div></div>
+</section>
+<section class="stat-grid">
+  <div class="stat-card"><span class="stat-label">Total complaints</span><strong>{{ totals['total'] or 0 }}</strong><small>All submitted reports</small></div>
+  <div class="stat-card"><span class="stat-label">Open complaints</span><strong>{{ totals['open_count'] or 0 }}</strong><small>Awaiting resolution</small></div>
+  <div class="stat-card"><span class="stat-label">High priority</span><strong class="red-text">{{ totals['high_count'] or 0 }}</strong><small>Needs prompt review</small></div>
+  <div class="stat-card"><span class="stat-label">Resolved</span><strong class="green-text">{{ totals['resolved_count'] or 0 }}</strong><small>Marked as resolved</small></div>
+</section>
+<section class="content-grid">
+  <div class="panel">
+    <div class="panel-heading"><div><h2>Recent complaints</h2><p>Latest issues reported on campus</p></div><a class="text-link" href="{{ url_for('complaints') }}">View all →</a></div>
+    {% if recent %}
+      <div class="table-wrap"><table><thead><tr><th>Issue</th><th>Location</th><th>Priority</th><th>Status</th></tr></thead><tbody>
+      {% for c in recent %}
+      <tr><td><a class="issue-link" href="{{ url_for('complaint_detail', complaint_id=c['id']) }}">#{{ c['id'] }} · {{ c['title'] }}</a><small>{{ c['category'] }}</small></td><td>{{ c['location'] }}</td><td><span class="badge {{ c['priority']|lower }}">{{ c['priority'] }}</span></td><td><span class="status">{{ c['status'] }}</span></td></tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+      <div class="empty-state"><div class="empty-icon">◎</div><h3>No complaints yet</h3><p>Start by reporting the first campus issue.</p><a class="btn primary" href="{{ url_for('report') }}">Submit a complaint</a></div>
+    {% endif %}
+  </div>
+  <div class="panel">
+    <div class="panel-heading"><div><h2>Issue overview</h2><p>Complaints grouped by category</p></div></div>
+    {% if category_rows %}<div class="chart-box"><canvas id="categoryChart"></canvas></div>{% else %}<div class="empty-mini">Your category chart will appear when complaints are submitted.</div>{% endif %}
+    <div class="tip-box"><span>✦</span><div><strong>Smart suggestions</strong><p>CampusFix uses rule-based suggestions to recommend categories and priorities. Staff can review and change them.</p></div></div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{% if category_rows %}
+<script>
+const categoryLabels = {{ category_rows|map(attribute='category')|list|tojson }};
+const categoryValues = {{ category_rows|map(attribute='count')|list|tojson }};
+new Chart(document.getElementById('categoryChart'), {
+  type:'doughnut',
+  data:{labels:categoryLabels,datasets:[{data:categoryValues,backgroundColor:['#5b67f1','#16b8a6','#f5a524','#f16b83','#8b72e8','#5aa6e8','#f08a48','#8a9aa9'],borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:8,padding:16}}},cutout:'68%'}
+});
+</script>
+{% endif %}
+{% endblock %}
